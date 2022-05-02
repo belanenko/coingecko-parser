@@ -1,19 +1,12 @@
 package apiserver
 
-import (
-	"github.com/belanenko/coingecko-parser/internal/app/storage"
-)
+import "github.com/belanenko/coingecko-parser/internal/app/store"
 
 type Config struct {
-	BindAddress    string `env:"BIND_ADDRESS"`
-	LogLevel       string `env:"LOG_LEVEL"`
-	WalletsHistory *storage.WalletsHistory
+	Store       *store.Config
+	BindAddress string `env:"BIND_ADDRESS"`
 }
 
-func NewConfig() *Config {
-	return &Config{
-		BindAddress:    ":8080",
-		LogLevel:       "debug",
-		WalletsHistory: storage.NewWalletsHistory(),
-	}
+func NewConfig(store *store.Config) *Config {
+	return &Config{Store: store}
 }

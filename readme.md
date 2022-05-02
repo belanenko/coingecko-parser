@@ -14,3 +14,4 @@ TODO:
 2. Сделать endpoints для апи:
 2.1 Получить цену за период `/getHistory?currency={currencyName}&from={startTime}&to={endTime}`
 3. Сделать горячее добавление/изменение списка валют
+4. Сделать доку на сваггере

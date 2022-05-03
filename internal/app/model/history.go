@@ -1,3 +1,6 @@
 package model
 
-type Currencies map[string][]History
+type History struct {
+	Price     float32
+	Timestamp string
+}

@@ -1,24 +1,19 @@
-package sqlstore
+package teststore
 
-import (
-	"github.com/belanenko/coingecko-parser/internal/app/store"
-	"github.com/jackc/pgx/v4"
-)
+import "github.com/belanenko/coingecko-parser/internal/app/model"
 
 type Store struct {
-	db                *pgx.Conn
+	db                map[string][]model.History
 	historyRepository *HistoryRepository
 }
 
-func New(db *pgx.Conn) *Store {
-	return &Store{
-		db: db,
-	}
+func New() *Store {
+	return &Store{}
 }
 
 // Игнорирую использование контекста/потом допилю
 
-func (s *Store) History() store.HistoryRepository {
+func (s *Store) History() *HistoryRepository {
 	if s.historyRepository != nil {
 		return s.historyRepository
 	}

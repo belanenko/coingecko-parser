@@ -7,29 +7,24 @@ import (
 
 	"github.com/belanenko/coingecko-parser/internal/app/apiserver"
 	"github.com/belanenko/coingecko-parser/internal/app/geckoparser"
-	"github.com/belanenko/coingecko-parser/internal/app/store"
 	"github.com/caarlos0/env"
 	"github.com/joho/godotenv"
 )
 
 func main() {
 	godotenv.Load()
-	storeConfig := store.NewConfig()
-	env.Parse(storeConfig)
-
-	apiserverConfig := apiserver.NewConfig(storeConfig)
+	apiserverConfig := apiserver.NewConfig()
 	env.Parse(apiserverConfig)
 
-	wallets := strings.Split(os.Getenv("WALLETS"), ",")
+	currencies := strings.Split(os.Getenv("WALLETS"), ",")
 
-	for i := range wallets {
-		wallets[i] = strings.TrimSpace(wallets[i])
+	for i := range currencies {
+		currencies[i] = strings.TrimSpace(currencies[i])
 	}
 
-	gecko := geckoparser.New(wallets)
+	gecko := geckoparser.New(currencies)
 
-	apiserver := apiserver.New(apiserverConfig, gecko)
-	if err := apiserver.Start(); err != nil {
+	if err := apiserver.Start(apiserverConfig, gecko); err != nil {
 		log.Fatal(err)
 	}
 }

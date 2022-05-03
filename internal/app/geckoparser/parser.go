@@ -2,17 +2,19 @@ package geckoparser
 
 import (
 	"strconv"
+	"sync"
 
 	"github.com/belanenko/coingecko-parser/internal/app/model"
 	coingecko "github.com/superoo7/go-gecko/v3"
 )
 
 type GeckoParser struct {
-	Wallets []string
+	sync.Mutex
+	Currencies []string
 }
 
 func New(wallets []string) *GeckoParser {
-	return &GeckoParser{Wallets: wallets}
+	return &GeckoParser{Currencies: wallets}
 }
 
 func (g *GeckoParser) GetPriceHistoryPeriod(currencyName string, days string) ([]model.History, error) {
@@ -30,7 +32,6 @@ func (g *GeckoParser) GetPriceHistoryPeriod(currencyName string, days string) ([
 		}
 		historyByDays = append(historyByDays, m)
 	}
-
 	return historyByDays, nil
 }
 

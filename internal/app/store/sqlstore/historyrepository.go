@@ -1,12 +1,12 @@
-package store
+package sqlstore
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"strconv"
 
 	"github.com/belanenko/coingecko-parser/internal/app/model"
+	"github.com/belanenko/coingecko-parser/internal/app/store"
 )
 
 type HistoryRepository struct {
@@ -16,7 +16,7 @@ type HistoryRepository struct {
 func (h *HistoryRepository) Add(currencyName string, priceHistory []model.History) error {
 	currencyId, err := h.GetCurrencyId(currencyName)
 	if err != nil {
-		if err != sql.ErrNoRows {
+		if err != store.ErrNoRows {
 			return err
 		}
 	}
@@ -69,7 +69,7 @@ func (h *HistoryRepository) GetCurrencyId(currencyName string) (int, error) {
 		if err.Error() != "no rows in result set" {
 			return -1, err
 		}
-		return -1, nil
+		return -1, store.ErrNoRows
 	}
 	return currencyId, nil
 }

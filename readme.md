@@ -1,7 +1,9 @@
 # Парсер coingecko.com
 
 Функционал апи:
-1. Получить историю валюты за прошедший год `/getHistory?currency={currencyName}`
+1. Получить историю валюты за прошедший год 
+POST `/getHistory` 
+json body: {"name":"bitcoin"}
 
 env:
 1. BINDADDRES - Адрес на котором поднимается сервис `":8080"`

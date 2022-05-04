@@ -13,8 +13,8 @@ type GeckoParser struct {
 	Currencies []string
 }
 
-func New(wallets []string) *GeckoParser {
-	return &GeckoParser{Currencies: wallets}
+func New(currencies []string) *GeckoParser {
+	return &GeckoParser{Currencies: currencies}
 }
 
 func (g *GeckoParser) GetPriceHistoryPeriod(currencyName string, days string) ([]model.History, error) {
@@ -33,6 +33,14 @@ func (g *GeckoParser) GetPriceHistoryPeriod(currencyName string, days string) ([
 		historyByDays = append(historyByDays, m)
 	}
 	return historyByDays, nil
+}
+
+func (g *GeckoParser) Len() int {
+	return len(g.Currencies)
+}
+
+func (g *GeckoParser) CurrenciesList() []string {
+	return g.Currencies
 }
 
 func floatToString(input_num float32) string {

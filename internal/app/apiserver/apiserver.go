@@ -4,12 +4,12 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/belanenko/coingecko-parser/internal/app/geckoparser"
+	"github.com/belanenko/coingecko-parser/internal/app/parser"
 	"github.com/belanenko/coingecko-parser/internal/app/store/sqlstore"
 	"github.com/jackc/pgx/v4"
 )
 
-func Start(config *Config, gecko *geckoparser.GeckoParser) error {
+func Start(config *Config, gecko parser.Parser) error {
 	db, err := newDB(config.DatabaseURL)
 	if err != nil {
 		return err

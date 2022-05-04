@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/belanenko/coingecko-parser/internal/app/apiserver"
-	"github.com/belanenko/coingecko-parser/internal/app/geckoparser"
+	"github.com/belanenko/coingecko-parser/internal/app/parser/geckoparser"
 	"github.com/caarlos0/env"
 	"github.com/joho/godotenv"
 )

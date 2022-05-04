@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/belanenko/coingecko-parser/internal/app/geckoparser"
 	"github.com/belanenko/coingecko-parser/internal/app/model"
+	"github.com/belanenko/coingecko-parser/internal/app/parser"
 	"github.com/belanenko/coingecko-parser/internal/app/store"
 	"github.com/gorilla/mux"
 )
@@ -19,12 +19,12 @@ var (
 )
 
 type server struct {
-	gecko  *geckoparser.GeckoParser
+	gecko  parser.Parser
 	router *mux.Router
 	store  store.Store
 }
 
-func newServer(store store.Store, gecko *geckoparser.GeckoParser) *server {
+func newServer(store store.Store, gecko parser.Parser) *server {
 	s := &server{
 		gecko:  gecko,
 		router: mux.NewRouter(),
@@ -40,10 +40,10 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) parseCurrenciesHistory() error {
-	if len(s.gecko.Currencies) <= 0 {
+	if s.gecko.Len() <= 0 {
 		return errors.New("currencies not found")
 	}
-	for _, currency := range s.gecko.Currencies {
+	for _, currency := range s.gecko.CurrenciesList() {
 		h, err := s.gecko.GetPriceHistoryPeriod(currency, "365")
 		if err != nil {
 			fmt.Fprintf(os.Stdout, "%s | %v\n", currency, err.Error())
@@ -53,22 +53,6 @@ func (s *server) parseCurrenciesHistory() error {
 			log.Fatal(err)
 		}
 	}
-	// wg := &sync.WaitGroup{}
-	// for _, currency := range s.gecko.Currencies {
-	// 	wg.Add(1)
-	// 	go func(currency string, wg *sync.WaitGroup) {
-	// 		defer wg.Done()
-	// 		h, err := s.gecko.GetPriceHistoryPeriod(currency, "365")
-	// 		if err != nil {
-	// 			fmt.Fprintf(os.Stdout, "%s | %v\n", currency, err.Error())
-	// 			return
-	// 		}
-	// 		if err := s.store.History().Add(currency, h); err != nil {
-	// 			log.Fatal(err)
-	// 		}
-	// 	}(currency, wg)
-	// }
-	// wg.Wait()
 
 	return nil
 }
@@ -99,6 +83,10 @@ func (s *server) handleGetHistory() http.HandlerFunc {
 				s.error(w, r, http.StatusInternalServerError, errIncorrectCurrency)
 			}
 			return
+		}
+
+		if history == nil {
+			s.error(w, r, http.StatusUnprocessableEntity, store.ErrNoRows)
 		}
 
 		s.respond(w, r, http.StatusOK, answer{

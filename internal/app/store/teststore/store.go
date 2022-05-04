@@ -8,7 +8,9 @@ type Store struct {
 }
 
 func New() *Store {
-	return &Store{}
+	return &Store{
+		db: make(map[string][]model.History),
+	}
 }
 
 // Игнорирую использование контекста/потом допилю

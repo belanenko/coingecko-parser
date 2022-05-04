@@ -2,6 +2,10 @@ package model
 
 import "testing"
 
+var (
+	TestCurrencyName = "testcoin"
+)
+
 func TestCurrency(t *testing.T) *Currencies {
 	t.Helper()
 

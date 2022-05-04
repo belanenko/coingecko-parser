@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  postgres:
+  db:
     image: postgres:14
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -12,7 +12,7 @@ services:
     volumes:
       - pgsql-data:/var/lib/postgresql
 
-  postgres_test:
+  db_test:
     image: postgres:14
     environment:
       POSTGRES_DB: ${POSTGRES_DB}_test
@@ -23,6 +23,20 @@ services:
       - 5433:5432
     volumes:
       - pgsql-data:/var/lib/postgresql
+  
+  web:
+    build: .
+    environment:
+      BIND_ADDRESS: ${BIND_ADDRESS}
+      DATABASE_URL: ${DATABASE_URL}
+      POSTGRES_DB: ${POSTGRES_DB}
+      WALLETS: ${WALLETS}
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+      - postgres_test
   
 volumes:
     pgsql-data:

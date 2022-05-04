@@ -1,8 +1,8 @@
 # Парсер coingecko.com
 
 Функционал апи:
-1. Получить историю валюты за прошедший год 
-POST `/getHistory` 
+1. Получить историю валюты за прошедший год <\br>
+POST `/getHistory` <\br>
 json body: {"name":"bitcoin"}
 
 env:
